@@ -53,8 +53,6 @@ jobs:
       # Upload production artifact for main branch
       - name: Upload production artifact
         if: github.ref_name == 'main'
-        run: |
-          echo "Uploading production build."
         uses: actions/upload-pages-artifact@v3
         with:
           path: '.'
@@ -62,21 +60,16 @@ jobs:
       # Upload test artifact for test_build branch
       - name: Upload test artifact
         if: github.ref_name == 'test_build'
-        run: |
-          echo "Uploading test build."
         uses: actions/upload-pages-artifact@v3
         with:
           path: 'test'
-
-      # Debug log: Display artifact upload information
-      - name: Log artifact upload details
-        run: echo "Artifact uploaded successfully."
 
       # Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
 
-      # Debug log: Display deployment status
-      - name: Display deployment status
-        run: echo "Deployment status: ${{ steps.deployment.outcome }}"
+      # Log final status (just confirming that deployment finished)
+      - name: Confirm deployment completion
+        run: echo "Deployment completed successfully."
+
