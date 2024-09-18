@@ -26,6 +26,7 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
+      # Move test build files into /test folder
       - name: Move test build to /test folder
         if: github.ref_name == 'test_build'
         run: |
@@ -35,18 +36,26 @@ jobs:
           mv -f TemplateData/* test/TemplateData/
           mv index.html test/
 
+      # Debug step: List directory contents
+      - name: List directory contents
+        run: ls -R .
+
+      # Upload production artifact for main branch
       - name: Upload production artifact
         if: github.ref_name == 'main'
         uses: actions/upload-pages-artifact@v3
         with:
           path: '.'
 
+      # Upload test artifact for test_build branch
       - name: Upload test artifact
         if: github.ref_name == 'test_build'
         uses: actions/upload-pages-artifact@v3
         with:
           path: 'test'
 
+      # Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
