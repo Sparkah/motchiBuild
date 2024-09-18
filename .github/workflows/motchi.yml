@@ -20,29 +20,41 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+      # Step to check out the repository
       - name: Checkout
         uses: actions/checkout@v4
 
+      # Step to setup Pages
       - name: Setup Pages
         uses: actions/configure-pages@v5
+
+      # Debug log: Display branch name and environment
+      - name: Display branch and environment
+        run: |
+          echo "Branch: ${{ github.ref_name }}"
+          echo "Environment: Deploying to ${{ github.ref_name == 'main' && 'Production' || 'Test' }}"
 
       # Move test build files into /test folder
       - name: Move test build to /test folder
         if: github.ref_name == 'test_build'
         run: |
+          echo "Moving files to /test for the test build."
           mkdir -p test/Build test/StreamingAssets test/TemplateData
           mv -f Build/* test/Build/
           mv -f StreamingAssets/* test/StreamingAssets/
           mv -f TemplateData/* test/TemplateData/
           mv index.html test/
+          echo "Files moved to /test."
 
-      # Debug step: List directory contents
-      - name: List directory contents
+      # Debug step: List directory contents after moving files
+      - name: List directory contents after moving files
         run: ls -R .
 
       # Upload production artifact for main branch
       - name: Upload production artifact
         if: github.ref_name == 'main'
+        run: |
+          echo "Uploading production build."
         uses: actions/upload-pages-artifact@v3
         with:
           path: '.'
@@ -50,12 +62,21 @@ jobs:
       # Upload test artifact for test_build branch
       - name: Upload test artifact
         if: github.ref_name == 'test_build'
+        run: |
+          echo "Uploading test build."
         uses: actions/upload-pages-artifact@v3
         with:
           path: 'test'
+
+      # Debug log: Display artifact upload information
+      - name: Log artifact upload details
+        run: echo "Artifact uploaded successfully."
 
       # Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
 
+      # Debug log: Display deployment status
+      - name: Display deployment status
+        run: echo "Deployment status: ${{ steps.deployment.outcome }}"
