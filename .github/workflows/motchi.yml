@@ -28,12 +28,6 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
-      # Debug log: Display branch name and environment
-      - name: Display branch and environment
-        run: |
-          echo "Branch: ${{ github.ref_name }}"
-          echo "Environment: Deploying to ${{ github.ref_name == 'main' && 'Production' || 'Test' }}"
-
       # Move test build files into /test folder
       - name: Move test build to /test folder
         if: github.ref_name == 'test_build'
@@ -68,3 +62,9 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+      # Deploy the artifact to a subdirectory for test builds
+      - name: Ensure deployment path for test_build
+        if: github.ref_name == 'test_build'
+        run: echo "Test build deployed to /test subdirectory."
+
