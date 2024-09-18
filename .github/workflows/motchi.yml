@@ -68,8 +68,3 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-
-      # Log final status (just confirming that deployment finished)
-      - name: Confirm deployment completion
-        run: echo "Deployment completed successfully."
-
