@@ -29,8 +29,11 @@ jobs:
       - name: Move test build to /test folder
         if: github.ref_name == 'test_build'
         run: |
-          mkdir -p test
-          mv Build StreamingAssets TemplateData index.html test/
+          mkdir -p test/Build test/StreamingAssets test/TemplateData
+          mv -f Build/* test/Build/
+          mv -f StreamingAssets/* test/StreamingAssets/
+          mv -f TemplateData/* test/TemplateData/
+          mv index.html test/
 
       - name: Upload production artifact
         if: github.ref_name == 'main'
